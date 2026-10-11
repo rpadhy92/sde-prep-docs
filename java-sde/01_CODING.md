@@ -1,636 +1,392 @@
-# 01 — Coding Round Preparation
+# 01 — Coding Questions for Interview
 
-## ⭐ Fundamentals First (start here)
-**Time:** 1-month plan **17 h** · 2-month plan **24 h** for this file — plus **3 h / 6 h** for Java 8+ Streams in [13_JAVA8_STREAMS_CODING.md](13_JAVA8_STREAMS_CODING.md) (total coding budget 20 h / 30 h; see [README](README.md)). Spread as 45–60 min *every day*.
+> **Target:** Service-based to mid-product companies. They test **clarity, correctness, edge cases and Java fluency** — not hard DS-Algo.
+> **Total:** ~85 problems across all sections. Pick ~50 for 1-month plan, all ~85 for 2-month.
+> **Java 8+ Streams** are in a separate file → [13_JAVA8_STREAMS_CODING.md](13_JAVA8_STREAMS_CODING.md)
 
-**Learn in this order**
-1. The approach: **C-E-A-C-T-T** framework (§2) and the **4-pass practice method** (§1.2) — 30 min, once.
-2. Java API fluency: `String/StringBuilder`, `ArrayList`, `HashMap` (`getOrDefault`, `merge`, `computeIfAbsent`), `HashSet`, `ArrayDeque`, `PriorityQueue`, `Comparator`, `Arrays.sort`.
-3. The 6 core patterns (§3): hashing, two pointers, sliding window, fast/slow pointers, size-K heap, stack.
-
-**Starter set — solve these 12 first, aloud, with a timer**
-Two Sum · valid anagram · first non-repeating char · palindrome · reverse linked list · merge two sorted lists · cycle detection · valid parentheses · Kth largest (heap) · top-K frequent · group anagrams · LRU cache.
-
-**Done when:** a 🟢 takes ≤10 min, a 🟡 ≤25 min, and you state complexity + 2 edge cases every time.
-**Skip if short on time:** all 🔴 items, trapping rain water, custom HashMap, histogram, DI container.
-
-> Goal: solve **basic-to-intermediate** problems cleanly, in Java, while talking. For service/mid-product companies, **clarity, correctness, edge cases and idiomatic Java** beat clever algorithms.
-> Legend: 🟢 ≤10 min · 🟡 ≤25 min · 🔴 ≤40 min
-
-**Contents**
-1. [How to Improve Your Coding Skills (Study Method)](#1-how-to-improve-your-coding-skills)
-2. [In-Interview Approach (Framework)](#2-in-interview-approach-framework)
-3. [Pattern Cheat-Sheet](#3-pattern-cheat-sheet)
-4. [Strings & Arrays](#4-strings--arrays)
-5. [LinkedList (approach + templates + questions)](#5-linkedlist)
-6. [HashMap / HashSet (approach + templates + questions)](#6-hashmap--hashset)
-7. [PriorityQueue / Heap (approach + templates + questions)](#7-priorityqueue--heap)
-8. [Stack / Queue / Deque](#8-stack--queue--deque)
-9. [Java 8+ Streams → separate file `13_JAVA8_STREAMS_CODING.md`](13_JAVA8_STREAMS_CODING.md) (grouping, 2-level grouping, `joining`, sorting, date/time)
-10. [OOP-flavoured Coding](#10-oop-flavoured-coding)
-11. [Concurrency Coding](#11-concurrency-coding)
-12. [Machine-Coding / Practical Rounds](#12-machine-coding--practical-rounds)
-13. [Coding Plan & Self-Check](#13-coding-plan--self-check)
+**Difficulty:** 🟢 Easy (≤10 min) · 🟡 Medium (≤20 min) · 🔴 Hard (≤35 min — asked for senior differentiation)
 
 ---
 
-## 1. How to Improve Your Coding Skills
+## How to Practice
 
-### 1.1 The core idea
-Interview coding is a **pattern-recognition + communication + discipline** skill, not raw intelligence. ~60–80 well-chosen problems, solved *deliberately*, beat 400 solved carelessly.
+1. **Daily:** 1–2 problems, 45 min. Use a timer. Talk aloud (interviews test *explaining*).
+2. **Method per problem:** Read → think 3 min → write brute force → optimize → code → test with an example → state time/space complexity.
+3. **If stuck:** write the brute force first. Then ask: "what repeated work can I remove? Can I hash / sort / use two pointers?"
+4. **Re-do:** every problem you struggled with → redo after 3 days and again after 10 days.
+5. **Edge cases (always check):** null, empty, single element, duplicates, negatives, very large input.
 
-### 1.2 The 4-Pass Method (use for every problem)
-| Pass | Action | Time |
+---
+
+## How to Approach a Coding Question (Step-by-Step)
+
+Use this **every time** you get a problem — in practice and in the real interview. The steps should become automatic.
+
+### Step 1 — Understand the problem (2–3 min)
+- **Read the problem fully.** Don't start coding after the first sentence.
+- **Repeat it back** in your own words: "So I need to find ... given ... and return ..."
+- **Ask clarifying questions** (interviewers expect this):
+  - Can the input be null or empty?
+  - Can there be duplicates? Negative numbers?
+  - Is the array/list sorted?
+  - Should I return indices or values? What if there are multiple answers?
+  - What's the expected size of the input? (tells you if O(n²) is acceptable)
+
+### Step 2 — Work through examples (2 min)
+- **Trace through the given example** by hand on paper/whiteboard.
+- **Create your own example** — a small one (3–5 elements) and an edge case (empty, single element, all same values).
+- This often reveals the pattern before you write any code.
+
+### Step 3 — Identify the pattern (1–2 min)
+**Read the problem clues and match them to a pattern:**
+
+| When the problem says... | Think of... | Why |
 |---|---|---|
-| 1. Attempt | Set a timer (Easy 15 / Medium 30). Solve **without** hints, no autocomplete for half of them. Talk aloud. | 15–30 min |
-| 2. Struggle | If stuck, write the brute force. A working brute force is better than nothing. Then think "what repeated work can I remove?" | 10 min |
-| 3. Learn | Read the best solution. Identify **the pattern name** and **the one insight** (e.g., "prefix-sum + HashMap"). Write it in your notes. | 10 min |
-| 4. Redo | Re-solve from a blank file **after 3 days**, then **after 10 days**. If you can't, it goes into the mistakes log. | 10 min each |
+| "Find if X exists", "count occurrences", "find duplicates", "find pair with sum" | **HashMap / HashSet** | O(1) lookup trades space for time |
+| "Find pair in a **sorted** array", "remove duplicates in place", "container with most water" | **Two pointers** (from both ends or slow/fast) | Sorted order lets you decide which pointer to move |
+| "Longest/shortest **substring** or **subarray** with some condition" | **Sliding window** | Expand right, shrink left — avoids checking all subarrays |
+| "Top K", "Kth largest", "K most frequent", "merge K sorted" | **Heap / PriorityQueue** | Min-heap of size K finds Kth largest in O(n log K) |
+| "Linked list: cycle, middle, Nth from end" | **Fast & slow pointers** | Fast moves 2x, slow 1x — they meet or fast hits end |
+| "Linked list: reverse, merge, delete" | **Dummy node + pointer rewiring** | Dummy node eliminates head edge cases |
+| "Matching brackets", "next greater element", "undo" | **Stack** | LIFO naturally handles nesting/matching |
+| "Find element in **sorted** data", "find boundary / first occurrence" | **Binary search** | O(log n) by halving the search space |
+| "Merge intervals", "overlapping ranges" | **Sort by start, then merge** | Sorting makes overlaps adjacent |
+| "All combinations / permutations / subsets" | **Backtracking** | Choose → recurse → un-choose |
+| "Optimal count, minimum cost, number of ways" | **Dynamic Programming** (basic: fibonacci, climbing stairs) | Overlapping subproblems → memoize |
+| "Group items by a key", "frequency count", "aggregate by category" | **Java Streams** `groupingBy` / `toMap` | Declarative, concise for collection transforms |
 
-### 1.3 Build skill in this order
-1. **Fluency in Java basics**: `String/StringBuilder`, `char` arithmetic, `int[]`, `List/Map/Set/Deque` APIs, `Collections.sort`, `Comparator`, `Arrays.fill/sort/copyOf`. If you google an API during practice, add it to a cheat-sheet.
-2. **Patterns** (Section 3): learn each pattern with 3–5 problems before moving on.
-3. **Speed + accuracy**: timed sets (2 problems/45 min), then 60-min mixed mock.
-4. **Communication**: record yourself solving; check you (a) clarified, (b) explained approach before coding, (c) tested with examples, (d) stated complexity.
-5. **Real-world flavour** (senior): thread-safety, clean class design, null-safety, readable naming, small methods, tests.
+**If no pattern jumps out:** start with the **brute force**. A working O(n²) beats an unfinished O(n). Then ask: "What repeated work am I doing? Can I remember (hash) previous results?"
 
-### 1.4 Weekly practice schedule (parallel to theory)
-| Day | Practice |
+### Step 4 — State your approach before coding (1 min)
+- **Say it out loud:** "I'll use a HashMap to store each number and its index. For each number, I check if target minus that number is already in the map."
+- **State the expected time and space complexity.**
+- **Get a nod** from the interviewer before writing code. This saves you from coding the wrong approach.
+
+### Step 5 — Write clean code (10–15 min)
+- **Start with the method signature** — name, params, return type.
+- **Handle edge cases first** at the top: `if (arr == null || arr.length == 0) return ...`
+- **Use meaningful names:** `frequencyMap` not `m`, `leftPointer` not `l`.
+- **Extract helper methods** if the code is getting long. Don't write one 50-line method.
+- **Talk while you code** — explain each block: "Here I'm iterating through the array and checking..."
+
+### Step 6 — Test with examples (2–3 min)
+- **Dry-run** your code on the small example from Step 2. Walk through each line with actual values.
+- **Then test an edge case:** empty input, single element, all duplicates, negative numbers.
+- **Fix bugs calmly.** Don't panic — it's normal to have a small off-by-one or missed condition. The interviewer watches how you debug.
+
+### Step 7 — Discuss complexity and follow-ups (1 min)
+- **State time and space complexity** without being asked.
+- **Mention trade-offs:** "This uses O(n) extra space for the HashMap. If space is a concern, I could sort the array and use two pointers for O(n log n) time and O(1) space."
+- **Be ready for follow-ups:** "What if the array is too large for memory?" "What if we need this to be thread-safe?" "Can you do it in place?"
+
+### Common Mistakes to Avoid
+| Mistake | What to do instead |
 |---|---|
-| Mon–Fri | 2 problems/day: 1 new, 1 redo from the mistakes log |
-| Sat | 60–90 min "mock": 2 problems back-to-back, timed, whiteboard/plain editor |
-| Sun | Review solutions, update pattern cheat-sheet, light revision |
+| Start coding immediately after reading | Spend 3–5 min on Steps 1–4 first |
+| Go silent while thinking | Think aloud — the interviewer can't read your mind and can help if you're on the wrong track |
+| Chase the optimal solution when stuck | Write the brute force first, then optimize. A working O(n²) scores points; an unfinished O(n) scores zero |
+| Compare `Integer` objects with `==` | Use `.equals()` — `==` only works for -128 to 127 (Integer cache) |
+| Use `a - b` in a Comparator | Use `Integer.compare(a, b)` — subtraction can overflow |
+| Forget null/empty checks | Add them at the top before the main logic |
+| Mutate a collection while iterating | Use `Iterator.remove()`, `removeIf()`, or iterate a copy |
+| Say "I'm done" without testing | Always dry-run with one example before declaring done |
+| Never mention complexity | State it proactively — this is a senior-level signal |
 
-### 1.5 Problem-count targets
-| Bucket | # problems |
+### Pattern Decision Flowchart
+
+```
+START: What does the problem ask for?
+│
+├── Does it involve a LINKED LIST?
+│   ├── Reverse / merge / delete → Dummy node + pointer manipulation
+│   ├── Find middle / cycle / Nth from end → Fast-slow pointers
+│   └── O(1) access + ordering (LRU cache) → HashMap + doubly linked list
+│
+├── Does it involve a STRING or ARRAY?
+│   ├── Is the data SORTED?
+│   │   ├── Find an element → Binary search
+│   │   ├── Find a pair with a sum → Two pointers (from both ends)
+│   │   └── Remove duplicates in place → Two pointers (slow-fast)
+│   │
+│   ├── Is it about a SUBSTRING / SUBARRAY with a condition?
+│   │   └── Sliding window (expand right, shrink left)
+│   │
+│   ├── "Find / count / check existence / pair / duplicate"?
+│   │   └── HashMap or HashSet
+│   │
+│   ├── "Subarray sum equals K" (with negatives)?
+│   │   └── Prefix sum + HashMap
+│   │
+│   ├── "Top K / Kth largest / most frequent"?
+│   │   └── Heap (PriorityQueue)
+│   │
+│   └── "Matching / nesting / next greater"?
+│       └── Stack (often monotonic)
+│
+├── Does it involve INTERVALS / RANGES?
+│   └── Sort by start → merge or sweep
+│
+├── Is it about GROUPING / AGGREGATION on objects?
+│   └── Java Streams: groupingBy, toMap, joining
+│
+├── Is it about CONCURRENCY / THREADS?
+│   └── wait/notify, Semaphore, BlockingQueue, CompletableFuture
+│
+└── Nothing fits?
+    └── Write the BRUTE FORCE first (nested loops).
+        Then optimize: "Can I hash previous results? Can I sort and use pointers?"
+```
+
+---
+
+## Plan (~96 problems, 1 per day)
+
+| Week | Sections |
 |---|---|
-| Strings/Arrays | 15 |
-| LinkedList | 8 |
-| HashMap/HashSet | 12 |
-| PriorityQueue/Heap | 8 |
-| Stack/Queue | 6 |
-| Streams (see [file 13](13_JAVA8_STREAMS_CODING.md): Top-10 / Top-25) | 10–25 |
-| Concurrency + OOP | 8–10 |
-| Machine-coding | 3–4 full builds |
-| **Total** | **~70–80** |
-
-### 1.6 Habits that separate senior candidates
-- Write **meaningful names** (`frequencyByChar`, not `m`).
-- **Validate inputs** (null/empty) before the algorithm.
-- **Extract helper methods** instead of one 60-line method.
-- Mention **complexity** and **trade-offs** unprompted.
-- **Dry-run** your code on a small example before saying "done".
-- Know the **Java standard library** (use `Deque` not `Stack`, `computeIfAbsent`, `Map.merge`, `Collectors.groupingBy`).
-- **Don't silently switch** approaches; say "my first idea is X, but it's O(n²); let me try Y".
-
-### 1.7 Common mistakes (check yourself)
-| Mistake | Fix |
-|---|---|
-| Jumping into code in 20 seconds | Spend first 3–5 min on clarifying + approach |
-| Ignoring edge cases | Checklist: null, empty, single element, duplicates, negatives, overflow, very large input |
-| `Integer` compared with `==` | Use `.equals()` / unbox |
-| `a - b` comparator overflow | `Integer.compare(a, b)` |
-| Mutating a collection while iterating | Use `Iterator.remove()` / `removeIf` / copy |
-| Off-by-one in loops/binary search | Dry-run with 1- and 2-element inputs |
-| Using `Stack`/`Vector` | Use `ArrayDeque` |
-| Forgetting to state complexity | Always say it |
-
-### 1.8 Tools
-- IDE-free practice: plain text editor / online compiler once a week (interviews often use CoderPad/HackerRank).
-- Keep a **template file** (Section 5–7 templates) — retype it weekly until automatic.
+| 1 | §1 Strings + §2 Numbers |
+| 2 | §3 Arrays |
+| 3 | §4 HashMap/HashSet |
+| 4 | §5 LinkedList |
+| 5 | §6 Heap + §7 Stack/Queue |
+| 6 | §8 Sorting + §9 OOP + §10 Concurrency |
+| 7 | §11 Machine-coding (1–2 builds) + Streams Top-10 |
+| 8 | Timed mixed practice + redo mistakes + Streams Top-25 |
 
 ---
 
-## 2. In-Interview Approach (Framework)
+## 1. Strings (12 problems)
 
-Use **C-E-A-C-T-T**:
-
-1. **C**larify — input size, null/empty, duplicates, sorted?, negative values, memory limits, expected return on invalid input.
-2. **E**xamples — draw 1 normal + 1 edge example, confirm expected output with the interviewer.
-3. **A**pproach — state brute force + complexity; then the optimized idea & the pattern name; get a nod.
-4. **C**ode — clean, named, helper methods; narrate key decisions.
-5. **T**est — dry-run with your example + 1–2 edge cases; fix bugs calmly.
-6. **T**alk complexity & follow-ups — time/space; what if the data doesn't fit in memory / multiple threads / streaming input?
-
-**If stuck:** (a) restate the problem, (b) solve a smaller case by hand, (c) ask "can I sort / hash / use two pointers / use a heap?", (d) offer the brute force, (e) ask for a hint *after* showing effort.
-
----
-
-## 3. Pattern Cheat-Sheet
-
-| Signal in the problem | Pattern | Typical structure |
-|---|---|---|
-| "Find pair/complement", "seen before?", "count occurrences" | **HashMap / HashSet** | one pass, store what you've seen |
-| "Sorted array", "pair with sum", "remove duplicates in place" | **Two pointers** | `l`, `r` from ends or `slow`, `fast` |
-| "Longest/shortest substring/subarray with condition" | **Sliding window** | expand `r`, shrink `l` while invalid |
-| "Subarray sum = K" with negatives | **Prefix sum + HashMap** | map(prefixSum → count) |
-| "Top K", "Kth largest", "merge K sorted", "stream median" | **Heap / PriorityQueue** | size-K heap |
-| "Cycle", "middle", "Nth from end" in list | **Fast/slow pointers** | `slow=slow.next; fast=fast.next.next` |
-| "Reverse / merge / partition list" | **Dummy node + pointer rewiring** | `dummy.next = head` |
-| "Matching brackets", "next greater", "undo" | **Stack** | push/pop; monotonic stack |
-| "Level by level", "shortest path (unweighted)" | **Queue / BFS** | `ArrayDeque` |
-| "All combinations/permutations" | **Backtracking** | choose → recurse → un-choose |
-| "Sorted + find", "min feasible value" | **Binary search** | `lo + (hi-lo)/2` |
-| "Overlapping ranges" | **Sort + merge** | sort by start |
-| "Optimal count/ways with overlapping subproblems" | **DP (basic: fib, climbing stairs, coin change)** | memo/table |
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Reverse a string** — Given a string, return it reversed. Do not use `StringBuilder.reverse()`. Example: `"hello"` → `"olleh"` | 🟢 | Convert to `char[]`, swap from both ends with two pointers |
+| 2 | **Palindrome check** — Given a string, check if it reads the same forwards and backwards. Ignore case and non-alphanumeric characters. Example: `"A man, a plan, a canal: Panama"` → `true` | 🟢 | Two pointers from both ends, skip non-alphanumeric, compare `toLowerCase` |
+| 3 | **Anagram check** — Given two strings, check if one is an anagram of the other (same characters, same frequency, different order). Example: `"listen"`, `"silent"` → `true` | 🟢 | Count character frequency in an `int[26]` array, or sort both and compare |
+| 4 | **First non-repeating character** — Given a string, find the first character that appears only once. Example: `"aabbcdd"` → `'c'` | 🟢 | Use `LinkedHashMap` to count frequency (preserves insertion order), then find first entry with count 1 |
+| 5 | **Character frequency count** — Given a string, return the count of each character. Example: `"apple"` → `{a:1, p:2, l:1, e:1}` | 🟢 | `HashMap<Character, Integer>` with `merge(c, 1, Integer::sum)` or `int[26]` for lowercase letters |
+| 6 | **Remove duplicate characters** — Given a string, remove duplicate characters while preserving the original order. Example: `"programming"` → `"progamin"` | 🟢 | Use `LinkedHashSet<Character>` (maintains insertion order, rejects duplicates) |
+| 7 | **Reverse words in a sentence** — Given a sentence, reverse the order of words (not the characters within words). Example: `"hello world java"` → `"java world hello"` | 🟢 | Split by space, reverse the array, join back. Or use two-pointer reversal approach |
+| 8 | **String compression** — Given a string, compress consecutive repeated characters with their count. Example: `"aaabbc"` → `"a3b2c1"`. If compressed is not shorter, return the original | 🟡 | Iterate through the string, count consecutive same characters, build result with `StringBuilder` |
+| 9 | **Longest substring without repeating characters** — Given a string, find the length of the longest substring that has no repeating characters. Example: `"abcabcbb"` → `3` (substring `"abc"`) | 🟡 | **Sliding window**: expand right pointer, when a duplicate is found move left pointer past the previous occurrence. Use `HashMap<Character, Integer>` to track last index |
+| 10 | **Balanced parentheses** — Given a string containing `()`, `[]`, `{}`, check if every opening bracket has a matching closing bracket in the correct order. Example: `"{[()]}"` → `true`, `"{[(])}"` → `false` | 🟡 | **Stack**: push opening brackets, pop on closing bracket and check if it matches |
+| 11 | **Longest common prefix** — Given an array of strings, find the longest prefix string that is common to all of them. Example: `["flower", "flow", "flight"]` → `"fl"` | 🟡 | Compare character by character across all strings. Stop at the shortest string's length or first mismatch |
+| 12 | **Group anagrams** — Given a list of strings, group the ones that are anagrams of each other. Example: `["eat","tea","tan","ate","nat","bat"]` → `[["eat","tea","ate"], ["tan","nat"], ["bat"]]` | 🟡 | **HashMap** with sorted-word as key: sort each word's characters, use that as the map key, collect words into lists |
 
 ---
 
-## 4. Strings & Arrays
+## 2. Numbers & Math (8 problems)
 
-### Strings
-- 🟢 Reverse a string / reverse words in a sentence (without `StringBuilder.reverse()`)
-- 🟢 Palindrome (ignore case & non-alphanumerics)
-- 🟢 Two strings are anagrams (int[26] or HashMap)
-- 🟢 Character frequency; first non-repeating character
-- 🟢 Remove duplicate characters preserving order (`LinkedHashSet`)
-- 🟡 Longest substring without repeating characters (**sliding window**)
-- 🟡 Valid parentheses `()[]{}` (**Stack**)
-- 🟡 String compression (`aaabb` → `a3b2`)
-- 🟡 Implement `atoi` with validation
-- 🟡 Longest common prefix
-- 🔴 Group anagrams (**HashMap** with sorted key)
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **FizzBuzz** — Print numbers from 1 to N. For multiples of 3 print "Fizz", multiples of 5 print "Buzz", multiples of both print "FizzBuzz". Example: `15` → `"FizzBuzz"` | 🟢 | Use modulo `%`. Check 15 (both) before 3 or 5 individually |
+| 2 | **Prime number check** — Given a number, determine if it is a prime number (divisible only by 1 and itself). Example: `29` → `true`, `15` → `false` | 🟢 | Loop from 2 to √n. If any number divides evenly, it's not prime. Handle edge cases: 0, 1, 2, negatives |
+| 3 | **Fibonacci sequence** — Generate the first N Fibonacci numbers, or return the Nth Fibonacci number. Example: N=7 → `[0, 1, 1, 2, 3, 5, 8]`. Implement iteratively, recursively, and with memoization | 🟢 | Iterative: two variables. Recursive: `fib(n) = fib(n-1) + fib(n-2)`. Memoized: cache results in an array |
+| 4 | **Factorial** — Calculate the factorial of a number (n! = n × (n-1) × ... × 1). Example: `5! = 120`. Implement both iteratively and recursively | 🟢 | Iterative: loop multiply. Recursive: `n * factorial(n-1)`, base case `0! = 1` |
+| 5 | **GCD (Greatest Common Divisor)** — Find the GCD of two numbers using the Euclidean algorithm. Example: `gcd(12, 8)` → `4` | 🟢 | `gcd(a, b) = gcd(b, a % b)` until `b == 0`, then `a` is the GCD |
+| 6 | **Swap two numbers without a temp variable** — Given two variables, swap their values without using a third variable. Example: `a=5, b=10` → `a=10, b=5` | 🟢 | XOR: `a ^= b; b ^= a; a ^= b;` or arithmetic: `a = a + b; b = a - b; a = a - b;` |
+| 7 | **Palindrome number** — Check if an integer reads the same forwards and backwards, without converting to a string. Example: `121` → `true`, `-121` → `false` | 🟢 | Reverse the digits by extracting last digit (`% 10`) and building reversed number. Compare with original. Negatives are not palindromes |
+| 8 | **Sieve of Eratosthenes** — Find all prime numbers up to a given number N. Example: N=20 → `[2, 3, 5, 7, 11, 13, 17, 19]` | 🟡 | Create boolean array `isPrime[0..N]` initialized to `true`. For each prime p starting from 2, mark all multiples of p as `false` |
 
-### Arrays & Numbers
-- 🟢 Largest / second-largest; reverse in place; rotate by K
-- 🟢 Missing number in 1..N (sum or XOR); find duplicate
-- 🟢 Fibonacci (iterative/recursive/memo), factorial, prime check, GCD, FizzBuzz
-- 🟡 Two Sum (HashMap), Three Sum (sort + two pointers)
-- 🟡 Merge two sorted arrays; remove duplicates from sorted array
-- 🟡 Move zeroes; Kadane's max subarray
-- 🟡 Binary search (and first/last occurrence)
-- 🟡 Intersection/union of two arrays
-- 🔴 Merge overlapping intervals
-- 🔴 Trapping rain water *(optional; product companies)*
+---
 
-#### Template — Sliding window (longest substring without repeats)
+## 3. Arrays (15 problems)
+
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Largest and second-largest** — Given an array of integers, find the largest and second-largest elements in a single pass. Example: `[5, 2, 8, 1, 9]` → largest=9, second=8 | 🟢 | Track two variables: `first` and `second`. Update both as you iterate |
+| 2 | **Reverse an array in place** — Reverse the elements of an array without using a new array. Example: `[1, 2, 3, 4]` → `[4, 3, 2, 1]` | 🟢 | Two pointers from start and end, swap and move inward |
+| 3 | **Missing number in 1..N** — Given an array containing N-1 distinct numbers from the range 1 to N, find the missing number. Example: `[1, 2, 4, 5]` → `3` | 🟢 | Calculate expected sum `N*(N+1)/2`, subtract actual sum. Or use XOR of all numbers with 1..N |
+| 4 | **Find the duplicate** — Given an array of N+1 numbers where each number is between 1 and N, find the duplicate. Example: `[1, 3, 4, 2, 2]` → `2` | 🟢 | HashSet (`add` returns false for duplicates), or sort and check adjacent, or sum/XOR approach |
+| 5 | **Rotate array by K positions** — Rotate an array to the right by K positions. Example: `[1, 2, 3, 4, 5]`, K=2 → `[4, 5, 1, 2, 3]` | 🟢 | Reverse trick: reverse entire array → reverse first K → reverse remaining. Handle K > length with `K %= length` |
+| 6 | **Move all zeroes to end** — Move all zeroes in an array to the end while maintaining the relative order of non-zero elements. Example: `[0, 1, 0, 3, 12]` → `[1, 3, 12, 0, 0]` | 🟡 | Two pointers: a "write" pointer for non-zero elements and a "read" pointer scanning forward |
+| 7 | **Two Sum** — Given an array of integers and a target sum, find the indices of two numbers that add up to the target. Example: `[2, 7, 11, 15]`, target=9 → `[0, 1]` | 🟡 | **HashMap**: for each number, check if `target - number` is already in the map. Store number → index |
+| 8 | **Merge two sorted arrays** — Given two sorted arrays, merge them into a single sorted array. Example: `[1, 3, 5]` + `[2, 4, 6]` → `[1, 2, 3, 4, 5, 6]` | 🟡 | Two pointers, one per array. Compare and pick the smaller, advance that pointer |
+| 9 | **Remove duplicates from sorted array (in place)** — Given a sorted array, remove duplicates in place and return the new length. The array should have unique elements at the front. Example: `[1, 1, 2, 2, 3]` → `[1, 2, 3, _, _]`, return 3 | 🟡 | Two pointers: slow (write position) and fast (scanner). Copy when `fast != slow` |
+| 10 | **Binary search** — Given a sorted array and a target value, return its index or -1 if not found. Implement iteratively. Example: `[1, 3, 5, 7, 9]`, target=7 → index 3 | 🟡 | `lo=0`, `hi=len-1`, `mid = lo + (hi-lo)/2`. Compare and adjust `lo` or `hi`. Use `(hi-lo)/2` to avoid integer overflow |
+| 11 | **First and last occurrence in sorted array** — Given a sorted array with duplicates and a target, find the first and last index of the target. Example: `[1, 2, 2, 2, 3]`, target=2 → `[1, 3]` | 🟡 | Run binary search twice: one modified to find the leftmost match, another for the rightmost match |
+| 12 | **Maximum subarray sum (Kadane's algorithm)** — Given an array of integers (can be negative), find the contiguous subarray with the largest sum. Example: `[-2, 1, -3, 4, -1, 2, 1, -5, 4]` → `6` (subarray `[4, -1, 2, 1]`) | 🟡 | Keep a running sum. If it goes negative, reset to 0. Track the maximum seen so far |
+| 13 | **Intersection and union of two arrays** — Given two arrays, find (a) common elements and (b) all unique elements across both. Example: `[1, 2, 2, 3]` + `[2, 3, 4]` → intersection: `[2, 3]`, union: `[1, 2, 3, 4]` | 🟡 | Use `HashSet` for each array. Intersection: elements in both sets. Union: add all to one set |
+| 14 | **Three Sum** — Given an array of integers, find all unique triplets that sum to zero. Example: `[-1, 0, 1, 2, -1, -4]` → `[[-1, -1, 2], [-1, 0, 1]]` | 🟡 | Sort the array. Fix one element, use two pointers for the remaining pair. Skip duplicates |
+| 15 | **Merge overlapping intervals** — Given a list of intervals `[start, end]`, merge all overlapping intervals. Example: `[[1,3],[2,6],[8,10],[15,18]]` → `[[1,6],[8,10],[15,18]]` | 🔴 | Sort intervals by start time. Iterate: if current overlaps with previous, merge (extend the end). Otherwise, add as new |
+
+---
+
+## 4. HashMap / HashSet (13 problems)
+
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Contains duplicate** — Given an array, return `true` if any value appears at least twice. Example: `[1, 2, 3, 1]` → `true` | 🟢 | `HashSet.add(x)` returns `false` if element already exists |
+| 2 | **Intersection of two arrays** — Given two arrays, return their common elements (unique). Example: `[1, 2, 2, 1]` + `[2, 2]` → `[2]` | 🟢 | Put one array in a `HashSet`, iterate the other and check `contains` |
+| 3 | **Two Sum (return indices)** — Given an array and a target, return the indices of two numbers that add up to the target. Each input has exactly one solution. Example: `[2, 7, 11, 15]`, target=9 → `[0, 1]` | 🟢 | `HashMap<Integer, Integer>` storing value → index. For each number, check if `target - num` exists in the map |
+| 4 | **Valid anagram** — Given two strings, check if the second is an anagram of the first (same characters, same count). Example: `"anagram"`, `"nagaram"` → `true` | 🟢 | Count character frequency using `int[26]`. Increment for string 1, decrement for string 2. All counts should be 0 |
+| 5 | **First non-repeating character** — Given a string, find the first character that occurs only once. Example: `"aabbcdd"` → `'c'` | 🟢 | Use `LinkedHashMap` (preserves insertion order) to count frequency. Then find first entry with value 1 |
+| 6 | **Majority element** — Given an array, find the element that appears more than N/2 times. It is guaranteed to exist. Example: `[3, 2, 3]` → `3` | 🟡 | HashMap counting, or **Boyer–Moore voting algorithm**: maintain a candidate and count; increment for same, decrement for different; when count hits 0, switch candidate |
+| 7 | **Group anagrams** — Given a list of strings, group strings that are anagrams of each other together. Example: `["eat","tea","tan","ate","nat","bat"]` → `[["eat","tea","ate"], ["tan","nat"], ["bat"]]` | 🟡 | Sort each word's characters to create a key. Use `HashMap<String, List<String>>` with `computeIfAbsent` |
+| 8 | **Top-K frequent elements** — Given an integer array and a number K, return the K most frequent elements. Example: `[1,1,1,2,2,3]`, K=2 → `[1, 2]` | 🟡 | First count frequency with `HashMap`. Then use a **min-heap (PriorityQueue)** of size K sorted by frequency. Or bucket sort by frequency |
+| 9 | **Longest consecutive sequence** — Given an unsorted array, find the length of the longest sequence of consecutive numbers. Example: `[100, 4, 200, 1, 3, 2]` → `4` (sequence: 1, 2, 3, 4) | 🟡 | Put all numbers in a `HashSet`. For each number, only start counting if `num - 1` is NOT in the set (this is the start of a sequence). Count upward with `num + 1`, `num + 2`, etc. |
+| 10 | **Subarray sum equals K** — Given an array of integers and a target K, find the total number of contiguous subarrays whose sum equals K. Example: `[1, 1, 1]`, K=2 → `2` | 🟡 | **Prefix sum + HashMap**: maintain running sum. Store `HashMap<sum, count>`. For each position, check if `sum - K` exists in the map (that means there's a subarray ending here with sum K) |
+| 11 | **Sort a HashMap by value** — Given a `HashMap<String, Integer>`, return the entries sorted by value in descending order. Example: `{apple:3, banana:1, cherry:5}` → `cherry=5, apple=3, banana=1` | 🟡 | Stream `entrySet()`, sort with `Map.Entry.comparingByValue().reversed()`, collect into `LinkedHashMap` to preserve order |
+| 12 | **LRU Cache** — Design a data structure that supports `get(key)` and `put(key, value)` in O(1). When the cache exceeds its capacity, evict the **least recently used** item. Example: capacity=2, put(1,1), put(2,2), get(1)→1, put(3,3) evicts key 2 | 🔴 | `HashMap<Key, Node>` for O(1) lookup + **doubly linked list** for O(1) add/remove (most recent at head, LRU at tail). Or use `LinkedHashMap` with access-order constructor |
+| 13 | **Insert, delete, getRandom in O(1)** — Design a data structure that supports `insert(val)`, `remove(val)`, and `getRandom()` each in average O(1) time. `getRandom` should return a random element with equal probability | 🔴 | `HashMap<value, index>` + `ArrayList`. Insert: append to list, store index in map. Remove: swap the element with the last element in the list, update map, remove last. Random: `list.get(random.nextInt(size))` |
+
+**Key Java APIs to know:**
 ```java
-public int lengthOfLongestSubstring(String s) {
-    if (s == null || s.isEmpty()) return 0;
-    Map<Character, Integer> lastSeen = new HashMap<>();
-    int best = 0, left = 0;
-    for (int right = 0; right < s.length(); right++) {
-        char c = s.charAt(right);
-        if (lastSeen.containsKey(c) && lastSeen.get(c) >= left) {
-            left = lastSeen.get(c) + 1;           // shrink past previous occurrence
-        }
-        lastSeen.put(c, right);
-        best = Math.max(best, right - left + 1);
-    }
-    return best;                                   // O(n) time, O(min(n, charset)) space
-}
-```
-
-#### Template — Two pointers (sorted array, pair with target sum)
-```java
-int l = 0, r = a.length - 1;
-while (l < r) {
-    int sum = a[l] + a[r];
-    if (sum == target) return new int[]{l, r};
-    if (sum < target) l++; else r--;
-}
-return new int[]{-1, -1};
+map.getOrDefault(key, 0)
+map.merge(key, 1, Integer::sum)              // increment count
+map.computeIfAbsent(key, k -> new ArrayList<>()).add(val)   // group-by
+map.putIfAbsent(key, val)
+set.add(x)   // returns false if already present
 ```
 
 ---
 
-## 5. LinkedList
+## 5. LinkedList (12 problems)
 
-### 5.1 How to approach linked-list problems
-1. **Draw it.** Boxes and arrows, label `prev/curr/next`. Never code a pointer problem in your head.
-2. **Know the 5 tools**:
-   - **Dummy (sentinel) node** — removes head special cases (merge, delete, partition, add numbers).
-   - **Two pointers (fast/slow)** — middle, cycle, Nth from end (gap of N).
-   - **In-place reversal** — save `next` *before* rewiring.
-   - **Recursion** — elegant but O(n) stack; mention it.
-   - **HashMap** — when pointers aren't enough (copy random list, LRU).
-3. **Always check**: `head == null`, single node, two nodes, `k` larger than length, even vs odd length.
-4. **Order of pointer operations matters**: save → rewire → advance.
-5. **Complexities:** typical O(n) time, O(1) space for pointer solutions.
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Reverse a linked list** — Given the head of a singly linked list, reverse it and return the new head. Example: `1→2→3→4→5` → `5→4→3→2→1` | 🟢 | Three pointers: `prev`, `curr`, `next`. Save next, rewire curr.next to prev, advance both |
+| 2 | **Find the middle node** — Given a linked list, return the middle node. If even length, return the second middle. Example: `1→2→3→4→5` → node with value 3 | 🟢 | **Fast/slow pointers**: slow moves 1 step, fast moves 2 steps. When fast reaches the end, slow is at middle |
+| 3 | **Merge two sorted linked lists** — Given two sorted linked lists, merge them into one sorted list. Example: `1→3→5` + `2→4→6` → `1→2→3→4→5→6` | 🟢 | **Dummy node** technique: create a dummy head, compare nodes from both lists, append the smaller one |
+| 4 | **Remove duplicates from sorted list** — Given a sorted linked list, delete all duplicate values, leaving only distinct values. Example: `1→1→2→3→3` → `1→2→3` | 🟢 | Compare `curr.val` with `curr.next.val`. If equal, skip the next node (`curr.next = curr.next.next`) |
+| 5 | **Detect cycle** — Given a linked list, determine if it has a cycle (a node's next points back to a previous node). Example: `1→2→3→4→2` (4 points back to 2) → `true` | 🟡 | **Floyd's cycle detection**: fast pointer moves 2 steps, slow moves 1. If they meet, there is a cycle |
+| 6 | **Find the start of the cycle** — If a linked list has a cycle, find the node where the cycle begins. Example: `1→2→3→4→5→3` (5 points back to 3) → node with value 3 | 🟡 | After fast and slow meet (Floyd's), reset one pointer to head. Move both one step at a time — they will meet at the cycle start |
+| 7 | **Remove Nth node from end** — Given a linked list and N, remove the Nth node from the end. Example: `1→2→3→4→5`, N=2 → `1→2→3→5` (removed 4) | 🟡 | **Two pointers with gap**: move the first pointer N steps ahead. Then move both until the first reaches the end. The second pointer is just before the node to remove. Use a **dummy node** to handle removing the head |
+| 8 | **Palindrome linked list** — Check if a linked list is a palindrome. Example: `1→2→2→1` → `true` | 🟡 | Find middle (fast/slow) → reverse the second half → compare first half with reversed second half |
+| 9 | **Add two numbers** — Two numbers are represented as linked lists where each node contains a single digit in reverse order. Add them and return the sum as a linked list. Example: `2→4→3` + `5→6→4` → `7→0→8` (342 + 465 = 807) | 🟡 | Iterate both lists simultaneously, sum digits + carry. Create new nodes for the result. Don't forget the final carry |
+| 10 | **Intersection of two linked lists** — Given two linked lists that may merge at some point, find the node where they intersect, or null if they don't. Example: `1→2→3→6→7` and `4→5→6→7` → node with value 6 | 🟡 | Calculate length difference, advance the longer list by the difference, then walk both together until they meet. Or: two-pointer swap trick (when one reaches the end, redirect to the other's head) |
+| 11 | **Reorder list** — Rearrange a linked list from `L0→L1→L2→...→Ln` to `L0→Ln→L1→Ln-1→L2→Ln-2→...`. Example: `1→2→3→4→5` → `1→5→2→4→3` | 🟡 | Three steps: (1) find middle with fast/slow, (2) reverse the second half, (3) merge the two halves alternately |
+| 12 | **LRU Cache using HashMap + doubly linked list** — Implement an LRU cache with O(1) `get` and `put`. On `get`, move the accessed node to the front (most recently used). On `put`, add to front; if capacity exceeded, remove the node at the tail (least recently used) | 🔴 | Maintain a `HashMap<key, Node>` for O(1) lookup and a doubly linked list with sentinel head/tail nodes for O(1) add-to-front and remove-from-tail |
 
-### 5.2 Node definition
+**Templates to memorize:**
 ```java
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int val) { this.val = val; }
+// Reverse
+ListNode prev = null, curr = head;
+while (curr != null) {
+    ListNode next = curr.next;
+    curr.next = prev;
+    prev = curr;
+    curr = next;
 }
+return prev;
+
+// Fast-slow (middle / cycle)
+ListNode slow = head, fast = head;
+while (fast != null && fast.next != null) {
+    slow = slow.next;
+    fast = fast.next.next;
+}
+// slow is at middle (or meeting point if checking cycle)
+
+// Dummy node (simplifies head edge cases)
+ListNode dummy = new ListNode(0);
+dummy.next = head;
+// ... work with dummy ...
+return dummy.next;
 ```
-
-### 5.3 Templates
-**Reverse (iterative)**
-```java
-public ListNode reverse(ListNode head) {
-    ListNode prev = null, curr = head;
-    while (curr != null) {
-        ListNode next = curr.next;   // 1. save
-        curr.next = prev;            // 2. rewire
-        prev = curr;                 // 3. advance
-        curr = next;
-    }
-    return prev;
-}
-```
-
-**Middle / cycle detection (fast–slow)**
-```java
-public ListNode middle(ListNode head) {            // for even length returns 2nd middle
-    ListNode slow = head, fast = head;
-    while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; }
-    return slow;
-}
-
-public boolean hasCycle(ListNode head) {
-    ListNode slow = head, fast = head;
-    while (fast != null && fast.next != null) {
-        slow = slow.next; fast = fast.next.next;
-        if (slow == fast) return true;
-    }
-    return false;
-}
-```
-
-**Cycle start (Floyd phase 2)** — after `slow == fast`, reset one pointer to `head`, move both one step at a time; they meet at the cycle start.
-
-**Merge two sorted lists (dummy node)**
-```java
-public ListNode merge(ListNode a, ListNode b) {
-    ListNode dummy = new ListNode(0), tail = dummy;
-    while (a != null && b != null) {
-        if (a.val <= b.val) { tail.next = a; a = a.next; }
-        else                { tail.next = b; b = b.next; }
-        tail = tail.next;
-    }
-    tail.next = (a != null) ? a : b;
-    return dummy.next;
-}
-```
-
-**Remove Nth node from end (gap of N, dummy)**
-```java
-public ListNode removeNthFromEnd(ListNode head, int n) {
-    ListNode dummy = new ListNode(0); dummy.next = head;
-    ListNode fast = dummy, slow = dummy;
-    for (int i = 0; i < n; i++) fast = fast.next;     // create gap n
-    while (fast.next != null) { fast = fast.next; slow = slow.next; }
-    slow.next = slow.next.next;
-    return dummy.next;
-}
-```
-
-**Palindrome list** — find middle → reverse second half → compare → (optionally restore).
-
-### 5.4 Questions
-- 🟢 Reverse a linked list (iterative **and** recursive)
-- 🟢 Find middle node
-- 🟢 Merge two sorted lists
-- 🟢 Delete a node given only that node (copy next, skip)
-- 🟢 Remove duplicates from sorted list
-- 🟡 Detect cycle; find cycle start; find cycle length
-- 🟡 Remove Nth node from end
-- 🟡 Palindrome linked list
-- 🟡 Intersection of two linked lists (length difference or two-pointer swap trick)
-- 🟡 Add two numbers represented as lists
-- 🟡 Reverse nodes in a sub-range (m to n)
-- 🟡 Rotate list by K
-- 🟡 Reorder list (L0→Ln→L1→Ln-1…): middle + reverse + interleave
-- 🔴 Reverse nodes in K-group
-- 🔴 Copy list with random pointer (HashMap or interleaving)
-- 🔴 Merge K sorted lists (→ **PriorityQueue**, Section 7)
-- 🔴 **LRU Cache** with HashMap + doubly linked list (see below)
-- 🔴 Sort a linked list (merge sort, O(n log n), O(1) extra space for bottom-up)
-
-### 5.5 Java `LinkedList` API trivia (often asked verbally)
-- `LinkedList` implements `List` **and** `Deque`; doubly linked.
-- `get(i)` is **O(n)**; add/remove at ends O(1); add/remove in middle O(1) *only after* you hold the node (iterator) — finding it is O(n).
-- In practice `ArrayDeque` beats `LinkedList` for stack/queue; `ArrayList` beats it for most lists (cache locality).
-
-### 5.6 LRU Cache — two implementations
-**A. Quick (LinkedHashMap, access-order)**
-```java
-class LRUCache<K, V> extends LinkedHashMap<K, V> {
-    private final int capacity;
-    LRUCache(int capacity) { super(16, 0.75f, true); this.capacity = capacity; }
-    @Override protected boolean removeEldestEntry(Map.Entry<K, V> eldest) { return size() > capacity; }
-}
-```
-**B. Manual (HashMap + doubly linked list)** — expected in senior rounds
-```java
-class LRUCache {
-    private static class Node { int key, val; Node prev, next; Node(int k, int v){key=k;val=v;} }
-    private final int capacity;
-    private final Map<Integer, Node> map = new HashMap<>();
-    private final Node head = new Node(0, 0), tail = new Node(0, 0);   // sentinels
-
-    LRUCache(int capacity) { this.capacity = capacity; head.next = tail; tail.prev = head; }
-
-    public int get(int key) {
-        Node n = map.get(key);
-        if (n == null) return -1;
-        remove(n); addFirst(n);                 // mark most-recently-used
-        return n.val;
-    }
-    public void put(int key, int value) {
-        Node n = map.get(key);
-        if (n != null) { n.val = value; remove(n); addFirst(n); return; }
-        if (map.size() == capacity) {           // evict LRU = node before tail
-            Node lru = tail.prev; remove(lru); map.remove(lru.key);
-        }
-        n = new Node(key, value); map.put(key, n); addFirst(n);
-    }
-    private void remove(Node n)   { n.prev.next = n.next; n.next.prev = n.prev; }
-    private void addFirst(Node n) { n.next = head.next; n.prev = head; head.next.prev = n; head.next = n; }
-}
-```
-Follow-ups: thread-safety (`synchronized`/`ReentrantLock`/segmenting), TTL expiry, LFU, distributed cache.
 
 ---
 
-## 6. HashMap / HashSet
+## 6. PriorityQueue / Heap (8 problems)
 
-### 6.1 How to approach
-**Ask yourself:** *"Am I re-scanning data to find/count/compare something I could have stored?"* If yes → hash it, trading O(n) space for O(1) lookup.
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Kth largest element** — Given an unsorted array and a number K, find the Kth largest element. Example: `[3, 2, 1, 5, 6, 4]`, K=2 → `5` | 🟢 | Maintain a **min-heap of size K**. Add elements; if heap size exceeds K, remove the smallest. At the end, `peek()` gives the Kth largest |
+| 2 | **Last stone weight** — You have a collection of stones with integer weights. Each turn, pick the two heaviest stones and smash them. If they're not equal, the remainder goes back. Return the weight of the last remaining stone (or 0). Example: `[2, 7, 4, 1, 8, 1]` → `1` | 🟢 | Use a **max-heap**. Poll two largest, push their difference (if non-zero) back. Repeat until ≤1 stone remains |
+| 3 | **Top-K frequent elements** — Given an array and K, return the K elements that appear most frequently. Example: `[1,1,1,2,2,3]`, K=2 → `[1, 2]` | 🟡 | Count frequency with `HashMap`. Then use a **min-heap of size K** sorted by frequency — this keeps only the K most frequent |
+| 4 | **K closest points to origin** — Given a list of 2D points and K, return the K points closest to the origin (0,0). Distance = √(x² + y²), but you can compare x²+y² directly. Example: `[[1,3],[-2,2]]`, K=1 → `[[-2,2]]` | 🟡 | **Max-heap of size K** sorted by distance. Add each point; if heap exceeds K, remove the farthest. Remaining K points are the closest |
+| 5 | **Sort characters by frequency** — Given a string, sort its characters in decreasing order of frequency. Example: `"tree"` → `"eert"` or `"eetr"` | 🟡 | Count frequency with `HashMap`, then use a **max-heap** sorted by frequency. Poll characters and append count times. Or use bucket sort |
+| 6 | **Merge K sorted lists** — Given K sorted linked lists, merge them into one sorted list. Example: `[1→4→5, 1→3→4, 2→6]` → `1→1→2→3→4→4→5→6` | 🟡 | Put the head of each list into a **min-heap** (sorted by node value). Poll the smallest, add it to the result, and push its `.next` back into the heap. Time: O(N log K) |
+| 7 | **Kth largest element in a stream** — Design a class that, given a stream of integers, can return the Kth largest element at any point. Example: K=3, stream `[4,5,8,2]` → after adding 2, 3rd largest = 4 | 🟡 | Maintain a **min-heap of size K**. On each `add()`: if heap size < K, add. Otherwise, if new element > `peek()`, poll and add. `peek()` always gives the Kth largest |
+| 8 | **Find median from data stream** — Design a data structure that supports adding numbers from a stream and finding the median at any time. Example: add 1, add 2 → median=1.5; add 3 → median=2 | 🔴 | Use **two heaps**: a max-heap for the lower half and a min-heap for the upper half. Balance so they differ by at most 1 in size. Median = top of the larger heap, or average of both tops |
 
-Recognition signals:
-| Signal | Structure |
-|---|---|
-| "Does X exist / seen before / duplicate?" | `HashSet` |
-| "Count occurrences / frequency / top-K by count" | `HashMap<T,Integer>` |
-| "Find complement / pair / index of …" | `HashMap<value,index>` |
-| "Group by …" (anagrams, by key) | `HashMap<key,List<…>>` |
-| "Subarray with sum K" | prefix-sum → `HashMap<sum,count>` |
-| "Longest consecutive / sequence without sorting" | `HashSet` + start-of-sequence check |
-| "Cache / memoization / LRU" | `HashMap` (+ linked list) |
+**Key points:**
+- Java `PriorityQueue` = **min-heap** by default.
+- Max-heap: `new PriorityQueue<>(Collections.reverseOrder())`
+- Use `Integer.compare(a, b)`, never `a - b` (overflow risk).
+- `poll()` gives elements in sorted order; iterating the queue does **not**.
 
-**Checklist:** what's the key? what's the value? what to store *before* vs *after* checking (order matters in Two Sum)? are keys mutable (never!)? do I need insertion order (`LinkedHashMap`) or sorted order (`TreeMap`)?
-
-**Java API fluency (use these, interviewers notice):**
 ```java
-map.merge(key, 1, Integer::sum);                       // count
-map.getOrDefault(key, 0);
-map.computeIfAbsent(key, k -> new ArrayList<>()).add(x);   // group-by
-map.putIfAbsent(key, v);
-for (Map.Entry<K,V> e : map.entrySet()) { ... }
-set.add(x)  // returns false if already present → dedupe/detect duplicate in one call
-```
-
-### 6.2 Templates
-**Two Sum (store after check)**
-```java
-public int[] twoSum(int[] nums, int target) {
-    Map<Integer, Integer> idx = new HashMap<>();
-    for (int i = 0; i < nums.length; i++) {
-        Integer j = idx.get(target - nums[i]);
-        if (j != null) return new int[]{j, i};
-        idx.put(nums[i], i);
-    }
-    return new int[]{-1, -1};
+// Kth largest — keep min-heap of size K
+PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+for (int n : nums) {
+    minHeap.offer(n);
+    if (minHeap.size() > k) minHeap.poll();
 }
+return minHeap.peek();  // Kth largest
 ```
-
-**Subarray sum equals K (prefix sum)**
-```java
-public int subarraySum(int[] nums, int k) {
-    Map<Integer, Integer> freq = new HashMap<>();
-    freq.put(0, 1);                       // empty prefix
-    int sum = 0, count = 0;
-    for (int x : nums) {
-        sum += x;
-        count += freq.getOrDefault(sum - k, 0);
-        freq.merge(sum, 1, Integer::sum);
-    }
-    return count;
-}
-```
-
-**Group anagrams**
-```java
-public List<List<String>> groupAnagrams(String[] strs) {
-    Map<String, List<String>> groups = new HashMap<>();
-    for (String s : strs) {
-        char[] c = s.toCharArray();
-        Arrays.sort(c);
-        groups.computeIfAbsent(new String(c), k -> new ArrayList<>()).add(s);
-    }
-    return new ArrayList<>(groups.values());
-}
-```
-
-**Longest consecutive sequence (O(n))**
-```java
-public int longestConsecutive(int[] nums) {
-    Set<Integer> set = new HashSet<>();
-    for (int n : nums) set.add(n);
-    int best = 0;
-    for (int n : set) {
-        if (!set.contains(n - 1)) {                // only start at sequence beginnings
-            int cur = n, len = 1;
-            while (set.contains(cur + 1)) { cur++; len++; }
-            best = Math.max(best, len);
-        }
-    }
-    return best;
-}
-```
-
-### 6.3 Questions
-**HashSet**
-- 🟢 Contains duplicate; first duplicate in array
-- 🟢 Intersection / union / difference of two arrays
-- 🟢 Remove duplicates preserving order (`LinkedHashSet`)
-- 🟢 Happy number (cycle detection with set)
-- 🟡 Longest consecutive sequence
-- 🟡 Check if two strings are isomorphic; word pattern
-- 🟡 Valid Sudoku (sets per row/col/box)
-
-**HashMap**
-- 🟢 Two Sum; character frequency; first non-repeating char
-- 🟢 Majority element (Boyer–Moore or map)
-- 🟢 Ransom note / valid anagram
-- 🟡 Group anagrams
-- 🟡 Top-K frequent elements (map + heap/bucket)
-- 🟡 Subarray sum equals K; contiguous array (0/1 equal counts)
-- 🟡 Four Sum II (map of pair sums)
-- 🟡 Sort a map by value; find the key with max value
-- 🟡 Find all duplicates; find missing numbers
-- 🔴 LRU / LFU cache
-- 🔴 Implement your own `HashMap` (array of buckets, chaining, resize at 0.75, `hashCode` → index, null-key)
-- 🔴 Design a data structure with insert/delete/getRandom in O(1) (HashMap + ArrayList, swap-with-last on delete)
-- 🔴 Time-based key-value store (map of key → sorted list, binary search)
-
-### 6.4 Verbal HashMap/HashSet traps
-- `HashSet` is backed by a `HashMap` (value = dummy `PRESENT`).
-- Mutable keys break lookups (hash changes after insertion).
-- `equals`/`hashCode` contract; `hashCode` collisions degrade to O(log n) via tree bins (Java 8, bin ≥ 8 and table ≥ 64) or O(n) for non-comparable keys in older versions.
-- Iteration order of `HashMap` is unspecified; use `LinkedHashMap`/`TreeMap` when order matters.
-- `HashMap` is not thread-safe (infinite loops in old resizes, lost updates) → `ConcurrentHashMap`.
-- Pre-size: `new HashMap<>((int)(n / 0.75f) + 1)` to avoid resizes.
 
 ---
 
-## 7. PriorityQueue / Heap
+## 7. Stack / Queue (6 problems)
 
-### 7.1 How to approach
-- A `PriorityQueue` is a **binary heap**: `offer/poll` O(log n), `peek` O(1), `remove(Object)` O(n), build from collection O(n). Java default = **min-heap**.
-- **Recognition signals:** "K largest/smallest", "Kth …", "merge K sorted …", "running median", "schedule by earliest/ smallest", "always process the best next".
-- **Golden trick — size-K heap:**
-  - **K largest** → keep a **min-heap of size K** (evict the smallest). Answer is the heap's contents; `peek()` = Kth largest.
-  - **K smallest** → keep a **max-heap of size K**.
-  - Time O(n log K), space O(K) — better than sorting O(n log n) when K ≪ n.
-- **Comparator care:** use `Integer.compare(a, b)` (never `a - b`; overflow). Max-heap: `Collections.reverseOrder()` or `(a, b) -> Integer.compare(b, a)`.
-- Store `int[]{value, index}` or a small record when you need extra data.
-- Iterating a `PriorityQueue` is **not sorted** — only `poll()` gives order.
-
-### 7.2 Templates
-**Kth largest element**
-```java
-public int findKthLargest(int[] nums, int k) {
-    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-    for (int n : nums) {
-        minHeap.offer(n);
-        if (minHeap.size() > k) minHeap.poll();   // drop smallest
-    }
-    return minHeap.peek();
-}
-```
-
-**Top-K frequent elements**
-```java
-public int[] topKFrequent(int[] nums, int k) {
-    Map<Integer, Integer> freq = new HashMap<>();
-    for (int n : nums) freq.merge(n, 1, Integer::sum);
-
-    PriorityQueue<Map.Entry<Integer, Integer>> heap =
-        new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));   // min-heap by count
-    for (Map.Entry<Integer, Integer> e : freq.entrySet()) {
-        heap.offer(e);
-        if (heap.size() > k) heap.poll();
-    }
-    int[] res = new int[k];
-    for (int i = k - 1; i >= 0; i--) res[i] = heap.poll().getKey();
-    return res;
-}
-```
-
-**Merge K sorted lists**
-```java
-public ListNode mergeKLists(ListNode[] lists) {
-    PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.val));
-    for (ListNode l : lists) if (l != null) pq.offer(l);
-    ListNode dummy = new ListNode(0), tail = dummy;
-    while (!pq.isEmpty()) {
-        ListNode n = pq.poll();
-        tail.next = n; tail = n;
-        if (n.next != null) pq.offer(n.next);
-    }
-    return dummy.next;                           // O(N log K)
-}
-```
-
-**Running median (two heaps)**
-```java
-class MedianFinder {
-    private final PriorityQueue<Integer> low  = new PriorityQueue<>(Collections.reverseOrder()); // max-heap (lower half)
-    private final PriorityQueue<Integer> high = new PriorityQueue<>();                           // min-heap (upper half)
-
-    public void addNum(int num) {
-        low.offer(num);
-        high.offer(low.poll());                      // balance order
-        if (high.size() > low.size()) low.offer(high.poll());   // keep low >= high in size
-    }
-    public double findMedian() {
-        return low.size() > high.size() ? low.peek() : (low.peek() + high.peek()) / 2.0;
-    }
-}
-```
-
-**Meeting rooms II (min rooms)** — sort by start; min-heap of end times; if `heap.peek() <= start` reuse (poll), always offer new end; answer = max heap size.
-
-### 7.3 Questions
-- 🟢 Kth largest / smallest element in array
-- 🟢 Last stone weight (max-heap simulation)
-- 🟡 Top-K frequent elements / words
-- 🟡 K closest points to origin
-- 🟡 Sort characters by frequency
-- 🟡 Meeting rooms II
-- 🟡 Task scheduler / reorganize string (max-heap by count)
-- 🟡 Connect ropes to minimize cost (Huffman-style)
-- 🟡 Kth largest element in a stream (class with `add`)
-- 🟡 Find K pairs with smallest sums
-- 🔴 Merge K sorted lists / arrays
-- 🔴 Find median from data stream
-- 🔴 Smallest range covering elements from K lists
-- 🔴 Implement your own min-heap (`siftUp`/`siftDown`, array-backed)
-- 🔴 Top-K trending with sliding window / expiry (heap + lazy deletion)
-
-### 7.4 Verbal PriorityQueue questions
-- Internal structure? (array-backed binary heap; parent `(i-1)/2`, children `2i+1`, `2i+2`)
-- Why is `PriorityQueue.remove(obj)` O(n)? Is it thread-safe? (No → `PriorityBlockingQueue`)
-- Null elements? (not allowed) · Ordering of equal elements? (not stable)
-- Why `Comparator` with subtraction is dangerous? (overflow)
-
----
-
-## 8. Stack / Queue / Deque
-- 🟢 Valid parentheses; implement queue using two stacks; stack using two queues
-- 🟡 Min Stack (O(1) `getMin`: store min alongside, or push `(val, currentMin)`)
-- 🟡 Next greater element (monotonic stack); daily temperatures
-- 🟡 Evaluate reverse Polish notation; decode string
-- 🟡 Sliding window maximum (monotonic `Deque`)
-- 🔴 Largest rectangle in histogram *(optional)*
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Valid parentheses** — Given a string containing `(`, `)`, `{`, `}`, `[`, `]`, determine if the brackets are valid (every open bracket has a matching close bracket in the correct nesting order). Example: `"{[()]}"` → `true`, `"([)]"` → `false` | 🟢 | **Stack**: push opening brackets. On a closing bracket, pop and check if it matches. At the end, the stack should be empty |
+| 2 | **Implement queue using two stacks** — Build a queue (FIFO) using only two stacks (LIFO). Support `enqueue`, `dequeue`, and `peek` operations | 🟢 | Push stack and pop stack. Enqueue: push onto stack 1. Dequeue: if stack 2 is empty, transfer all from stack 1 to stack 2 (this reverses order); then pop from stack 2 |
+| 3 | **Min Stack** — Design a stack that supports `push`, `pop`, `top`, and `getMin` — all in O(1) time. Example: push 5, push 2, push 7 → `getMin()` = 2, `pop()` removes 7, `getMin()` still = 2 | 🟡 | Store pairs of `(value, currentMin)` on the stack. When pushing, the new min is `Math.min(value, currentTop.min)`. When popping, the min is always in the top element |
+| 4 | **Next greater element** — Given an array, for each element find the next element to its right that is greater. If none exists, return -1. Example: `[4, 5, 2, 10]` → `[5, 10, 10, -1]` | 🟡 | **Monotonic stack** (decreasing): iterate through the array. Pop elements from the stack while the current element is greater than the top — for each popped element, the answer is the current element. Push current index |
+| 5 | **Daily temperatures** — Given a list of daily temperatures, for each day find how many days you have to wait until a warmer temperature. If no warmer day, return 0. Example: `[73, 74, 75, 71, 69, 72, 76, 73]` → `[1, 1, 4, 2, 1, 1, 0, 0]` | 🟡 | **Monotonic stack** of indices. Same pattern as "next greater element" but store index differences |
+| 6 | **Evaluate reverse Polish notation** — Evaluate an arithmetic expression in Reverse Polish Notation (postfix). Tokens are numbers or operators `+`, `-`, `*`, `/`. Example: `["2","1","+","3","*"]` → `9` (i.e., `(2+1)*3`) | 🟡 | **Stack**: push numbers. When you encounter an operator, pop two operands, apply the operator, push the result back. The final element on the stack is the answer |
 
 ```java
-// Monotonic stack: next greater element
-int[] res = new int[n]; Arrays.fill(res, -1);
-Deque<Integer> st = new ArrayDeque<>();           // stores indices
+// Monotonic stack — next greater element
+int[] result = new int[n];
+Arrays.fill(result, -1);
+Deque<Integer> stack = new ArrayDeque<>();   // stores indices
 for (int i = 0; i < n; i++) {
-    while (!st.isEmpty() && a[st.peek()] < a[i]) res[st.pop()] = a[i];
-    st.push(i);
+    while (!stack.isEmpty() && arr[stack.peek()] < arr[i])
+        result[stack.pop()] = arr[i];
+    stack.push(i);
 }
 ```
+**Note:** Use `ArrayDeque` (not `Stack` class) for stack and queue in Java.
 
 ---
 
-## 9. Java 8+ Streams → moved to its own file
+## 8. Sorting & Searching (5 problems)
 
-**Go to [13_JAVA8_STREAMS_CODING.md](13_JAVA8_STREAMS_CODING.md)** — sorting, single-level and **two-level grouping**, `Collectors.joining`, strings/characters, `flatMap`, maps, **date/time with streams**, advanced collectors, pitfalls, verbal questions and a Top-10 / Top-25 practice plan.
-
-**Top-10 to start with (≈ 3 h):** count per dept · avg salary per dept · highest paid per dept · 2nd highest salary · multi-field sort · dept → joined names · **dept → city → names (2-level grouping)** · char frequency + first non-repeating char · word frequency + top 3 · group by joining year.
-
----
-
-## 10. OOP-Flavoured Coding
-- 🟢 Immutable class (final class/fields, no setters, defensive copies)
-- 🟢 `equals`/`hashCode`/`toString` correctly
-- 🟡 Thread-safe Singleton (enum / Bill Pugh / double-checked locking with `volatile`)
-- 🟡 Builder for a class with 6+ fields
-- 🟡 Custom checked & unchecked exception in a service
-- 🟡 `Comparable` vs `Comparator` for a custom class
-- 🔴 Mini DI container (annotations + reflection)
-- 🔴 Custom `ArrayList<T>` with resize + `Iterator`
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Sort 0s, 1s and 2s (Dutch National Flag)** — Given an array containing only 0s, 1s, and 2s, sort it in place in a single pass. Example: `[2, 0, 1, 2, 0, 1]` → `[0, 0, 1, 1, 2, 2]` | 🟡 | Three pointers: `low`, `mid`, `high`. Swap 0s to the left (low), 2s to the right (high), 1s stay in the middle |
+| 2 | **Sort a list of objects by multiple fields** — Given a list of `Employee` objects, sort by department (ascending), then by salary (descending) within each department. Example: sort employees first by dept name A-Z, then highest salary first within each dept | 🟡 | `Comparator.comparing(Employee::getDept).thenComparing(Employee::getSalary, Comparator.reverseOrder())` |
+| 3 | **Find peak element** — A peak element is one that is strictly greater than its neighbors. Given an array, find any peak element's index. The array may have multiple peaks. Example: `[1, 2, 3, 1]` → index 2 (value 3) | 🟡 | **Binary search**: if `mid` element < its right neighbor, a peak exists on the right half; otherwise on the left half |
+| 4 | **Search in rotated sorted array** — Given a sorted array that has been rotated at some pivot (e.g., `[4,5,6,7,0,1,2]`), search for a target value. Example: `[4,5,6,7,0,1,2]`, target=0 → index 4 | 🟡 | **Modified binary search**: determine which half is sorted, then check if the target lies in the sorted half |
+| 5 | **Integer square root** — Given a non-negative integer N, compute the integer part of √N without using `Math.sqrt`. Example: `sqrt(8)` → `2` (since √8 ≈ 2.828) | 🟡 | **Binary search** on the answer space: search for the largest `x` such that `x * x <= N`. Search range [0, N] |
 
 ---
 
-## 11. Concurrency Coding
-- 🟡 Print odd/even with two threads (`wait/notify`, then `Semaphore`)
-- 🟡 Print `1 A 2 B 3 C…` alternately
-- 🟡 Create and then fix a deadlock (lock ordering)
-- 🟡 `ExecutorService` + `Future` / `CompletableFuture` for N tasks
-- 🔴 **Producer–Consumer** with `BlockingQueue` and with `wait/notify`
-- 🔴 Bounded blocking queue (lock + 2 conditions)
-- 🔴 Thread-safe rate limiter (token bucket / sliding window)
-- 🔴 Simple custom thread pool
-- 🔴 `CompletableFuture`: call 3 services in parallel, combine, timeout + fallback
+## 9. OOP-Flavoured Coding (6 problems)
+
+| # | Problem | Difficulty | What it tests |
+|---|---|---|---|
+| 1 | **Create an immutable class** — Design a Java class whose instances cannot be modified after creation. The class should have fields like name, date-of-birth, and a list of hobbies. Ensure no one can change any field or the list's contents after construction | 🟢 | `final` class, `final` fields, no setters, constructor with **defensive copies** of mutable objects (like `List` and `Date`), return copies from getters |
+| 2 | **Implement `equals()`, `hashCode()`, `toString()`** — For a `Student` class with fields `id`, `name`, and `email`, implement all three methods correctly following the Java contract. Explain what breaks if `hashCode()` is wrong | 🟢 | `equals`: check type, compare fields. `hashCode`: use same fields as `equals` (contract: equal objects **must** have equal hash codes). `toString`: return meaningful representation |
+| 3 | **Thread-safe Singleton (3 ways)** — Implement the Singleton design pattern (only one instance of a class exists) in a thread-safe way. Show three different approaches and explain trade-offs | 🟡 | (1) **Enum singleton** (simplest, serialization-safe). (2) **Bill Pugh** (inner static holder class, lazy). (3) **Double-checked locking** with `volatile` (explain why `volatile` is needed) |
+| 4 | **Builder pattern** — Design a `UserProfile` class with 8+ fields (name, email, phone, address, age, etc.) where most fields are optional. Use the Builder pattern so callers can set only the fields they need | 🟡 | Static inner `Builder` class with fluent setter methods that return `this`. The `build()` method validates required fields and returns the immutable object |
+| 5 | **Comparable vs Comparator** — Given an `Employee` class, implement natural ordering by `id` using `Comparable`, and create separate `Comparator` implementations for sorting by name, by salary, and by multiple fields | 🟡 | `Comparable`: implement `compareTo()` in the class. `Comparator`: create external comparator objects, chain with `thenComparing()` |
+| 6 | **Custom exceptions** — Create a custom checked exception (`InsufficientFundsException`) and a custom unchecked exception (`InvalidAccountException`). Use them in a `BankAccount` service. Explain when to use checked vs unchecked | 🟡 | Checked: extends `Exception` (caller must handle or declare). Unchecked: extends `RuntimeException` (programming errors, validation failures). Include meaningful messages and cause chains |
+
+---
+
+## 10. Concurrency Coding (6 problems)
+
+| # | Problem | Difficulty | Hint |
+|---|---|---|---|
+| 1 | **Print odd/even using two threads** — Create two threads: one prints odd numbers (1, 3, 5, ...) and the other prints even numbers (2, 4, 6, ...) up to N. They must alternate correctly: 1, 2, 3, 4, 5, ... | 🟡 | Use `synchronized` + `wait()`/`notify()` on a shared lock object. Or use two `Semaphore`s |
+| 2 | **Print numbers and letters alternately** — Two threads: Thread-1 prints 1, 2, 3, ... and Thread-2 prints A, B, C, ... They must alternate: `1 A 2 B 3 C ...` | 🟡 | Same `wait/notify` pattern. Shared boolean flag to indicate whose turn it is |
+| 3 | **Create a deadlock and then fix it** — Write code that deliberately creates a deadlock between two threads (each waiting for a lock the other holds). Then modify it to fix the deadlock | 🟡 | Deadlock: Thread-1 locks A then B, Thread-2 locks B then A. Fix: both threads lock in the **same order** (A then B), or use `tryLock` with timeout |
+| 4 | **Producer-Consumer with BlockingQueue** — Implement the producer-consumer pattern: one thread produces items and adds them to a shared queue, another thread consumes items from the queue. Use `BlockingQueue` for thread-safe communication | 🟡 | `ArrayBlockingQueue` with bounded capacity. Producer calls `put()` (blocks if full). Consumer calls `take()` (blocks if empty). Use a **poison pill** value to signal termination |
+| 5 | **Run N tasks in parallel and collect results** — Given a list of tasks (e.g., call 5 different APIs), run them all in parallel using a thread pool, wait for all to complete, and collect all results | 🟡 | `ExecutorService` + `submit()` returns `Future<T>`. Collect all futures, call `get()` on each. Or use `CompletableFuture.supplyAsync()` + `join()` |
+| 6 | **Call 3 APIs in parallel, combine results with timeout** — Make 3 independent API calls concurrently. Combine their results into one response. If any call takes more than 2 seconds, use a fallback value | 🔴 | `CompletableFuture.supplyAsync()` for each call. Combine with `thenCombine()` or `allOf()`. Apply timeout with `.orTimeout(2, SECONDS)` and fallback with `.exceptionally(ex -> defaultValue)` |
 
 ```java
-// Producer-Consumer with BlockingQueue
+// Producer-Consumer
 BlockingQueue<Integer> q = new ArrayBlockingQueue<>(5);
 Thread producer = new Thread(() -> {
-    try { for (int i = 0; i < 20; i++) q.put(i); q.put(-1); }          // -1 = poison pill
+    try { for (int i = 0; i < 10; i++) q.put(i); q.put(-1); }
     catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 });
 Thread consumer = new Thread(() -> {
-    try { for (int v; (v = q.take()) != -1; ) System.out.println("consumed " + v); }
+    try { for (int v; (v = q.take()) != -1; ) System.out.println(v); }
     catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 });
 producer.start(); consumer.start();
@@ -638,45 +394,56 @@ producer.start(); consumer.start();
 
 ---
 
-## 12. Machine-Coding / Practical Rounds (60–90 min)
-- 🟡 Parse CSV/log file → aggregates (streams, I/O, exceptions)
-- 🟡 REST CRUD API (Spring Boot) with validation + exception handling + tests
-- 🟡 Retry with exponential backoff + jitter
-- 🔴 In-memory key-value store with TTL
-- 🔴 In-memory Pub-Sub / event bus
-- 🔴 URL shortener (service + storage + collision handling)
-- 🔴 Rate limiter, parking lot, splitwise (see [10_LLD_DESIGN_PATTERNS.md](10_LLD_DESIGN_PATTERNS.md))
+## 11. Machine-Coding (60–90 min rounds) (5 problems)
 
-**Approach for machine-coding:** (1) clarify scope & write requirements as bullets, (2) model entities/interfaces, (3) get the **happy path working first**, (4) then validation/exceptions, (5) then thread-safety, (6) add 3–5 focused unit tests, (7) leave 5 min to discuss extensions. Prefer readability & working code over patterns for patterns' sake.
+These are practical build-and-code rounds. Get the **happy path working first**, then add validation, error handling, and tests.
+
+| # | Problem | Difficulty | What to build |
+|---|---|---|---|
+| 1 | **Parse a CSV/log file and compute aggregates** — Read a CSV file of sales records (product, region, amount). Compute total sales per region, top product by sales, and average sale amount. Handle malformed rows gracefully | 🟡 | File I/O (`BufferedReader`/`Files.lines`), `Stream` processing, `groupingBy`, `summingDouble`, exception handling for bad rows |
+| 2 | **REST CRUD API with validation** — Build a Spring Boot REST API for managing `Employee` records (create, read, update, delete). Add input validation (name required, salary > 0) and return proper error responses (400, 404, 500) | 🟡 | `@RestController`, `@Valid`, `@ExceptionHandler`/`@ControllerAdvice`, proper HTTP status codes, DTO vs entity |
+| 3 | **Retry with exponential backoff** — Implement a generic retry mechanism that retries a failed operation up to N times with exponentially increasing delays (1s, 2s, 4s, 8s...). Add jitter (random variation) to prevent thundering herd | 🟡 | Generic method accepting a `Supplier<T>`, loop with `Thread.sleep(delay)`, `delay *= 2`, add random jitter. Distinguish retryable vs non-retryable exceptions |
+| 4 | **In-memory key-value store with TTL** — Design a `put(key, value, ttlSeconds)` / `get(key)` store where entries expire after their TTL. `get` should return null for expired entries. Handle cleanup of expired entries | 🔴 | `ConcurrentHashMap<Key, Entry>` where `Entry` holds value + expiry timestamp. Lazy cleanup on `get`, plus a background `ScheduledExecutorService` for periodic cleanup |
+| 5 | **URL shortener** — Build a service that takes a long URL and returns a short code (e.g., `abc123`). Given a short code, redirect to the original URL. Handle collisions, track click counts, and support expiry | 🔴 | Counter/hash-based ID → base62 encode, `HashMap<code, URL>` or DB, collision check, atomic counter or `UUID` |
 
 ---
 
-## 13. Coding Plan & Self-Check
+## 12. Java 8+ Streams
 
-Coding hours match the [README](README.md) budget: **20 h (1-month)** / **30 h (2-month)** = this file (**17 h / 24 h**) + Streams in [13_JAVA8_STREAMS_CODING.md](13_JAVA8_STREAMS_CODING.md) (**3 h / 6 h**). Always start with the ⭐ starter set above, then follow the plan for your timeline.
+→ **Separate file: [13_JAVA8_STREAMS_CODING.md](13_JAVA8_STREAMS_CODING.md)**
 
-**1-Month plan (20 h ≈ 35–40 problems)**
-| Week | Hours | Focus | Problems |
-|---|---|---|---|
-| 1 | 6 | Strings, Arrays, LinkedList basics, HashMap basics | ~10 |
-| 2 | 5 | HashMap/HashSet, PriorityQueue, Stack/Queue | ~10 |
-| 3 | 5 | **Streams Top-10 ([file 13](13_JAVA8_STREAMS_CODING.md) §15, ≈3 h)**, then concurrency basics + 1 OOP-flavoured item (≈2 h) | ~12 (10 stream + 2) |
-| 4 | 4 | Mixed timed sets (2 problems / 45 min) + redo mistakes-log; re-code LRU, producer-consumer, reverse list, top-K, group anagrams from memory | ~8 |
+Covers: sorting, grouping, **two-level grouping**, `Collectors.joining`, strings, `flatMap`, maps, **date/time**, pitfalls.
 
-**2-Month plan (30 h ≈ 60–70 problems)**
-| Week | Hours | Focus |
+**Start with the Top-10:** count per dept · avg salary per dept · highest paid per dept · 2nd highest salary · multi-field sort · dept → joined names · dept → city → names (2-level grouping) · char frequency · word frequency top 3 · group by joining year.
+
+---
+
+## Summary — Problem Count by Section
+
+| Section | Topic | Problems |
 |---|---|---|
-| 1 | 4 | Strings + Arrays (≈10 problems) |
-| 2 | 4 | LinkedList (≈8) incl. LRU |
-| 3 | 4 | HashMap/HashSet (≈10) |
-| 4 | 4 | PriorityQueue (≈8) + Stack/Queue (≈5) |
-| 5 | 4 | **Streams Top-10 + variants (≈3 h, [file 13](13_JAVA8_STREAMS_CODING.md) §15)** + OOP-flavoured (≈4 items, ≈1 h) |
-| 6 | 4 | Concurrency (≈6) |
-| 7 | 3 | Machine-coding builds (2) + timed sets incl. **Streams Top-25 items 11–18** |
-| 8 | 3 | Mixed timed sets incl. **Streams Top-25 items 19–25** + redo mistakes-log + final from-memory rewrite of the starter set |
+| §1 | Strings | 12 |
+| §2 | Numbers & Math | 8 |
+| §3 | Arrays | 15 |
+| §4 | HashMap / HashSet | 13 |
+| §5 | LinkedList | 12 |
+| §6 | PriorityQueue / Heap | 8 |
+| §7 | Stack / Queue | 6 |
+| §8 | Sorting & Searching | 5 |
+| §9 | OOP-Flavoured | 6 |
+| §10 | Concurrency | 6 |
+| §11 | Machine-Coding | 5 |
+| §12 | Streams | [separate file](13_JAVA8_STREAMS_CODING.md) |
+| | **Total** | **96** |
 
-**Self-check — you're ready when you can:**
-- [ ] Solve a 🟢 in ≤10 min and a 🟡 in ≤25 min, talking aloud, in a plain editor
-- [ ] Write reverse-list, merge-lists, cycle detection, LRU, top-K (heap), Two Sum, group-anagrams, sliding window **from memory**
-- [ ] State time/space complexity & 2 edge cases for every solution
-- [ ] Explain why you chose HashMap vs TreeMap vs PriorityQueue for a problem
+For the **1-month plan**, pick ~50 (all 🟢 + select 🟡). For the **2-month plan**, do all ~96.
+
+---
+
+## Self-Check
+
+You're ready when you can:
+- [ ] Solve a 🟢 in ≤10 min and a 🟡 in ≤20 min, talking aloud
+- [ ] Write from memory: reverse list, Two Sum, valid parentheses, Kth largest (heap), LRU cache, producer-consumer
+- [ ] State time/space complexity for every solution
+- [ ] Name 2 edge cases for every problem before coding
